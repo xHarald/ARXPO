@@ -1,0 +1,123 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ITC2._0.Models;
+
+namespace ITC2._0.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PresentacionesController : ControllerBase
+    {
+        private readonly ArxpoContext _context;
+
+        public PresentacionesController(ArxpoContext context)
+        {
+            _context = context;
+        }
+
+        // GET: api/Presentaciones
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Presentacione>>> GetPresentaciones()
+        {
+          if (_context.Presentaciones == null)
+          {
+              return NotFound();
+          }
+            return await _context.Presentaciones.ToListAsync();
+        }
+
+        // GET: api/Presentaciones/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Presentacione>> GetPresentacione(int id)
+        {
+          if (_context.Presentaciones == null)
+          {
+              return NotFound();
+          }
+            var presentacione = await _context.Presentaciones.FindAsync(id);
+
+            if (presentacione == null)
+            {
+                return NotFound();
+            }
+
+            return presentacione;
+        }
+
+        // PUT: api/Presentaciones/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutPresentacione(int id, Presentacione presentacione)
+        {
+            if (id != presentacione.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(presentacione).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PresentacioneExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        // POST: api/Presentaciones
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Presentacione>> PostPresentacione(Presentacione presentacione)
+        {
+          if (_context.Presentaciones == null)
+          {
+              return Problem("Entity set 'ArxpoContext.Presentaciones'  is null.");
+          }
+            _context.Presentaciones.Add(presentacione);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetPresentacione", new { id = presentacione.Id }, presentacione);
+        }
+
+        // DELETE: api/Presentaciones/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePresentacione(int id)
+        {
+            if (_context.Presentaciones == null)
+            {
+                return NotFound();
+            }
+            var presentacione = await _context.Presentaciones.FindAsync(id);
+            if (presentacione == null)
+            {
+                return NotFound();
+            }
+
+            _context.Presentaciones.Remove(presentacione);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool PresentacioneExists(int id)
+        {
+            return (_context.Presentaciones?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+    }
+}
