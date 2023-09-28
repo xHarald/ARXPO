@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>ITC2._0</RootNamespace>
+    <UserSecretsId>dd2feb31-8793-4fcf-a07b-f9daf894aed5</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
