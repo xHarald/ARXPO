@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITC2._0.Models;
+using ITC2._0.ModelsView;
 
 namespace ITC2._0.Controllers
 {
@@ -22,13 +23,27 @@ namespace ITC2._0.Controllers
 
         // GET: api/Estudiantes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Estudiante>>> GetEstudiantes()
+        public async Task<ActionResult<IEnumerable<EstudiantesMV>>> GetEstudiantes()
         {
           if (_context.Estudiantes == null)
           {
               return NotFound();
           }
-            return await _context.Estudiantes.ToListAsync();
+            var query = from estudiantes in await _context.Estudiantes.ToListAsync()
+                        join programas in await _context.Programas.ToListAsync() on estudiantes.Id equals programas.Id                                        
+                        join proyectos in await _context.Proyectos.ToListAsync() on estudiantes.Id equals proyectos.Id 
+                        select new EstudiantesMV
+                        {
+                            Codigo = estudiantes.Id,
+                            Nombre = estudiantes.Nombre,
+                            Telefono = estudiantes.Telefono,
+                            TipoIdentificacion = estudiantes.TipoIdentificacion,
+                            Identificacion = estudiantes.Identificacion,
+                            Programa = programas.NombrePrograma,
+                            Proyecto = proyectos.Nombre
+
+                        };
+            return  query.ToList(); 
         }
 
         // GET: api/Estudiantes/5
