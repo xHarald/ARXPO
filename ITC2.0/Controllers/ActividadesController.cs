@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITC2._0.Models;
+using ITC2._0.ModelsView;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace ITC2._0.Controllers
 {
@@ -22,14 +24,31 @@ namespace ITC2._0.Controllers
 
         // GET: api/Actividades
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Actividade>>> GetActividades()
+        public async Task<ActionResult<IEnumerable<ActividadesMV>>> GetActividades()
         {
-          if (_context.Actividades == null)
-          {
-              return NotFound();
-          }
-            return await _context.Actividades.ToListAsync();
+            if (_context.Actividades == null)
+            {
+                return NotFound();
+            }
+
+            var query = from actividades in await _context.Actividades.ToListAsync()
+                        join estudiantes in await _context.Estudiantes.ToListAsync() on actividades.Id equals estudiantes.Id
+                        join usuarios in await _context.Usuarios.ToListAsync() on estudiantes.Id equals usuarios.Id
+                        select new ActividadesMV
+                        {
+                            Codigo = actividades.Id,
+                            Estudiante = estudiantes.Nombre,
+                            Titulo = actividades.TituloActividad,
+                            Descripcion = actividades.Descripcion,
+                            Horas = actividades.Horas,
+                            Terminar = actividades.Horas,
+                            Correo =usuarios.Correo,
+
+
+                        };
+            return query.ToList();
         }
+
 
         // GET: api/Actividades/5
         [HttpGet("{id}")]
