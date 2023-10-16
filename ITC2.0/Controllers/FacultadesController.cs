@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITC2._0.Models;
+using ITC2._0.ModelsView;
 
 namespace ITC2._0.Controllers
 {
@@ -22,13 +23,22 @@ namespace ITC2._0.Controllers
 
         // GET: api/Facultades
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Facultade>>> GetFacultades()
+        public async Task<ActionResult<IEnumerable<FacultadesMV>>> GetEstudiantes()
         {
-          if (_context.Facultades == null)
-          {
-              return NotFound();
-          }
-            return await _context.Facultades.ToListAsync();
+            if (_context.Estudiantes == null)
+            {
+                return NotFound();
+            }
+            var query = from facultades in await _context.Facultades.ToListAsync()
+                        select new FacultadesMV
+                        {
+                            Codigo = facultades.Id,
+                            Nombre = facultades.Nombre,
+                            Descripcion = facultades.Descripcion,
+                            Contacto = facultades.TelefonoContacto,
+                            Correo = facultades.Correo
+                        };
+            return query.ToList();
         }
 
         // GET: api/Facultades/5

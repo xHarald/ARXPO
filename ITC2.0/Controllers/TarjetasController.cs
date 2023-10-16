@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITC2._0.Models;
+using ITC2._0.ModelsView;
 
 namespace ITC2._0.Controllers
 {
@@ -22,13 +23,28 @@ namespace ITC2._0.Controllers
 
         // GET: api/Tarjetas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tarjeta>>> GetTarjetas()
+        public async Task<ActionResult<IEnumerable<TarjetasMV>>> GetEstudiantes()
         {
-          if (_context.Tarjetas == null)
-          {
-              return NotFound();
-          }
-            return await _context.Tarjetas.ToListAsync();
+            if (_context.Estudiantes == null)
+            {
+                return NotFound();
+            }
+            var query = from tarjetas in await _context.Tarjetas.ToListAsync()
+                        join proyectos in await _context.Proyectos.ToListAsync() on tarjetas.Id equals proyectos.Id
+                        select new TarjetasMV
+                        {
+                            Codigo = tarjetas.Id,
+                            Titulo = tarjetas.Titulo,
+                            Descripcion = tarjetas.Descripcion,
+                            Link = tarjetas.Link,
+                            Extension = tarjetas.Extension,
+                            Subida = tarjetas.FechaSubida,
+                            Terminado = tarjetas.FechaTerminado,
+                            Estado = tarjetas.Estado,
+                            Proyecto = proyectos.Nombre,
+
+                        };
+            return query.ToList();
         }
 
         // GET: api/Tarjetas/5

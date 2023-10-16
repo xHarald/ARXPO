@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITC2._0.Models;
+using ITC2._0.ModelsView;
 
 namespace ITC2._0.Controllers
 {
@@ -22,13 +23,26 @@ namespace ITC2._0.Controllers
 
         // GET: api/Usuarios
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
+        public async Task<ActionResult<IEnumerable<UsuariosMV>>> GetEstudiantes()
         {
-          if (_context.Usuarios == null)
-          {
-              return NotFound();
-          }
-            return await _context.Usuarios.ToListAsync();
+            if (_context.Estudiantes == null)
+            {
+                return NotFound();
+            }
+            var query = from usuarios in await _context.Usuarios.ToListAsync()
+                        join estudiantes in await _context.Estudiantes.ToListAsync() on usuarios.Id equals estudiantes.Id
+                        join docentes in await _context.Docentes.ToListAsync() on usuarios.Id equals docentes.Id
+                        join administradores in await _context.Administradores.ToListAsync() on usuarios.Id equals administradores.Id
+                        select new UsuariosMV
+                        {
+                            Codigo = usuarios.Id,
+                            Nombre = estudiantes.Nombre,
+                            Correo = usuarios.Correo,
+                            Contraseña = usuarios.Contraseña,
+                           
+
+                        };
+            return query.ToList();
         }
 
         // GET: api/Usuarios/5
