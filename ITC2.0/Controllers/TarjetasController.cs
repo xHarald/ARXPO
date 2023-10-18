@@ -30,7 +30,6 @@ namespace ITC2._0.Controllers
                 return NotFound();
             }
             var query = from tarjetas in await _context.Tarjetas.ToListAsync()
-                        join proyectos in await _context.Proyectos.ToListAsync() on tarjetas.Id equals proyectos.Id
                         select new TarjetasMV
                         {
                             Codigo = tarjetas.Id,
@@ -38,11 +37,9 @@ namespace ITC2._0.Controllers
                             Descripcion = tarjetas.Descripcion,
                             Link = tarjetas.Link,
                             Extension = tarjetas.Extension,
-                            Subida = tarjetas.FechaSubida,
-                            Terminado = tarjetas.FechaTerminado,
+                            Fecha_Subida = tarjetas.FechaSubida,
+                            Fecha_Terminado = tarjetas.FechaTerminado,
                             Estado = tarjetas.Estado,
-                            Proyecto = proyectos.Nombre,
-
                         };
             return query.ToList();
         }

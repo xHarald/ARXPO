@@ -14,12 +14,10 @@
 
         public string? Observacion { get; set; }
 
-        public DateTime? Subida { get; set; }
+        public DateTime? Fecha_Subida { get; set; }
 
-        public DateTime? Terminado { get; set; }
+        public DateTime? Fecha_Terminado { get; set; }
 
         public string? Estado { get; set; }
-
-        public string? Proyecto { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITC2._0.Models;
+using ITC2._0.ModelsView;
 
 namespace ITC2._0.Controllers
 {
@@ -22,13 +23,22 @@ namespace ITC2._0.Controllers
 
         // GET: api/Programas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Programa>>> GetProgramas()
+        public async Task<ActionResult<IEnumerable<ProgramasMV>>> GetEstudiantes()
         {
-          if (_context.Programas == null)
-          {
-              return NotFound();
-          }
-            return await _context.Programas.ToListAsync();
+            if (_context.Estudiantes == null)
+            {
+                return NotFound();
+            }
+            var query = from programas in await _context.Programas.ToListAsync()
+                        join facultades in await _context.Facultades.ToListAsync() on programas.IdFacultad equals facultades.Id
+                        select new ProgramasMV
+                        {
+                            Codigo = programas.Id,
+                            Nombre_Programa = programas.NombrePrograma,
+                            Descripcion = programas.Descripcion,
+                            Facultad = facultades.Nombre
+                        };
+            return query.ToList();
         }
 
         // GET: api/Programas/5

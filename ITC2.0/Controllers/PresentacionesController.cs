@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITC2._0.Models;
+using ITC2._0.ModelsView;
 
 namespace ITC2._0.Controllers
 {
@@ -22,13 +23,24 @@ namespace ITC2._0.Controllers
 
         // GET: api/Presentaciones
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Presentacione>>> GetPresentaciones()
+        public async Task<ActionResult<IEnumerable<PresentacionesMV>>> GetEstudiantes()
         {
-          if (_context.Presentaciones == null)
-          {
-              return NotFound();
-          }
-            return await _context.Presentaciones.ToListAsync();
+            if (_context.Estudiantes == null)
+            {
+                return NotFound();
+            }
+            var query = from presentaciones in await _context.Presentaciones.ToListAsync()
+                        join proyectos in await _context.Proyectos.ToListAsync() on presentaciones.IdProyecto equals proyectos.Id
+                        join administradores in await _context.Administradores.ToListAsync() on presentaciones.IdAdministrador equals administradores.Id
+                        select new PresentacionesMV
+                        {
+                            Codigo = presentaciones.Id,
+                            Dia_Presentacion = presentaciones.DiaPresentacion,
+                            Salon = presentaciones.Salon,
+                            Nombre_Proyecto = proyectos.Nombre,
+                            Administrador = administradores.Nombre
+                        };
+            return query.ToList();
         }
 
         // GET: api/Presentaciones/5
