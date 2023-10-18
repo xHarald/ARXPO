@@ -29,22 +29,15 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
-            var query = from usuarios in await _context.Usuarios.ToListAsync()
-                        join estudiantes in await _context.Estudiantes.ToListAsync() on usuarios.Id equals estudiantes.Id
-                        join docentes in await _context.Docentes.ToListAsync() on usuarios.Id equals docentes.Id
-                        join administradores in await _context.Administradores.ToListAsync() on usuarios.Id equals administradores.Id
+            var query = from usuarios in await _context.Usuarios.ToListAsync()                        
                         select new UsuariosMV
                         {
                             Codigo = usuarios.Id,
-                            Nombre = estudiantes.Nombre,
                             Correo = usuarios.Correo,
-                            Contraseña = usuarios.Contraseña,
-                           
-
+                            Contraseña = usuarios.Contraseña            
                         };
             return query.ToList();
         }
-
         // GET: api/Usuarios/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> GetUsuario(int id)

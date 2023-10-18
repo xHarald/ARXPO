@@ -32,8 +32,7 @@ namespace ITC2._0.Controllers
             }
 
             var query = from actividades in await _context.Actividades.ToListAsync()
-                        join estudiantes in await _context.Estudiantes.ToListAsync() on actividades.Id equals estudiantes.Id
-                        join usuarios in await _context.Usuarios.ToListAsync() on estudiantes.Id equals usuarios.Id
+                        join estudiantes in await _context.Estudiantes.ToListAsync() on actividades.IdEstudiante equals estudiantes.Id
                         select new ActividadesMV
                         {
                             Codigo = actividades.Id,
@@ -42,9 +41,6 @@ namespace ITC2._0.Controllers
                             Descripcion = actividades.Descripcion,
                             Horas = actividades.Horas,
                             Terminar = actividades.Horas,
-                            Correo =usuarios.Correo,
-
-
                         };
             return query.ToList();
         }
