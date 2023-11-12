@@ -11,6 +11,8 @@ public partial class Usuario
 
     public string? Contraseña { get; set; }
 
+    public string? Estado { get; set; }
+
     public virtual ICollection<Administradore> Administradores { get; set; } = new List<Administradore>();
 
     public virtual ICollection<Docente> Docentes { get; set; } = new List<Docente>();

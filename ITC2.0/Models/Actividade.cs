@@ -17,5 +17,7 @@ public partial class Actividade
 
     public TimeSpan? Terminar { get; set; }
 
+    public string? Estado { get; set; }
+
     public virtual Estudiante? IdEstudianteNavigation { get; set; }
 }

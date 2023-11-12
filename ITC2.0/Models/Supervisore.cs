@@ -13,6 +13,8 @@ public partial class Supervisore
 
     public int? IdDocente { get; set; }
 
+    public string? Estado { get; set; }
+
     public virtual Docente? IdDocenteNavigation { get; set; }
 
     public virtual Proyecto? IdProyectoNavigation { get; set; }

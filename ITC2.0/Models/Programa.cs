@@ -13,6 +13,8 @@ public partial class Programa
 
     public int? IdFacultad { get; set; }
 
+    public bool Estado { get; set; } = true;
+
     public virtual ICollection<Estudiante> Estudiantes { get; set; } = new List<Estudiante>();
 
     public virtual Facultade? IdFacultadNavigation { get; set; }

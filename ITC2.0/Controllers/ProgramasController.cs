@@ -25,11 +25,11 @@ namespace ITC2._0.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProgramasMV>>> GetEstudiantes()
         {
-            if (_context.Estudiantes == null)
+            if (_context.Programas == null)
             {
                 return NotFound();
             }
-            var query = from programas in await _context.Programas.ToListAsync()
+            var query = from programas in await _context.Programas.Where(e => e.Estado).ToListAsync()
                         join facultades in await _context.Facultades.ToListAsync() on programas.IdFacultad equals facultades.Id
                         select new ProgramasMV
                         {
@@ -107,19 +107,22 @@ namespace ITC2._0.Controllers
 
         // DELETE: api/Programas/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePrograma(int id)
+        public async Task<IActionResult> DeleteProgramas(int id)
         {
             if (_context.Programas == null)
             {
                 return NotFound();
             }
-            var programa = await _context.Programas.FindAsync(id);
-            if (programa == null)
+
+            var estudiante = await _context.Programas.FindAsync(id);
+            if (estudiante == null)
             {
                 return NotFound();
             }
 
-            _context.Programas.Remove(programa);
+            // En lugar de eliminar físicamente, marca el estudiante como inactivo
+            estudiante.Estado = false;
+
             await _context.SaveChangesAsync();
 
             return NoContent();

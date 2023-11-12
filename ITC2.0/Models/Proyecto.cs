@@ -15,9 +15,11 @@ public partial class Proyecto
 
     public DateTime? UltimaActualizacion { get; set; }
 
-    public string? Estado { get; set; }
+    public string? EstadoProyecto { get; set; }
 
     public int? IdTarjeta { get; set; }
+
+    public string? Estado { get; set; }
 
     public virtual ICollection<Estudiante> Estudiantes { get; set; } = new List<Estudiante>();
 
