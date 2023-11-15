@@ -23,13 +23,13 @@ namespace ITC2._0.Controllers
 
         // GET: api/Docentes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DocentesMV>>> GetEstudiantes()
+        public async Task<ActionResult<IEnumerable<DocentesMV>>> GetDocente()
         {
-            if (_context.Estudiantes == null)
+            if (_context.Docentes == null)
             {
                 return NotFound();
             }
-            var query = from docentes in await _context.Docentes.ToListAsync()
+            var query = from docentes in await _context.Docentes.Where(e => e.Estado).ToListAsync()
                         join usuarios in await _context.Usuarios.ToListAsync() on docentes.IdUsuario equals usuarios.Id
                         join presentaciones in await _context.Presentaciones.ToListAsync() on docentes.IdPresentacion equals presentaciones.Id
                         select new DocentesMV
@@ -115,13 +115,16 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
+
             var docente = await _context.Docentes.FindAsync(id);
             if (docente == null)
             {
                 return NotFound();
             }
 
-            _context.Docentes.Remove(docente);
+            // En lugar de eliminar físicamente, marca el estudiante como inactivo
+            docente.Estado = false;
+
             await _context.SaveChangesAsync();
 
             return NoContent();

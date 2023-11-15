@@ -23,13 +23,13 @@ namespace ITC2._0.Controllers
 
         // GET: api/Usuarios
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UsuariosMV>>> GetEstudiantes()
+        public async Task<ActionResult<IEnumerable<UsuariosMV>>> GetUsuario()
         {
-            if (_context.Estudiantes == null)
+            if (_context.Usuarios == null)
             {
                 return NotFound();
             }
-            var query = from usuarios in await _context.Usuarios.ToListAsync()                        
+            var query = from usuarios in await _context.Usuarios.Where(e => e.Estado).ToListAsync()
                         select new UsuariosMV
                         {
                             Codigo = usuarios.Id,
@@ -110,13 +110,16 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
+
             var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario == null)
             {
                 return NotFound();
             }
 
-            _context.Usuarios.Remove(usuario);
+            // En lugar de eliminar físicamente, marca el estudiante como inactivo
+            usuario.Estado = false;
+
             await _context.SaveChangesAsync();
 
             return NoContent();

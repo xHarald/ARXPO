@@ -23,13 +23,13 @@ namespace ITC2._0.Controllers
 
         // GET: api/Facultades
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FacultadesMV>>> GetEstudiantes()
+        public async Task<ActionResult<IEnumerable<FacultadesMV>>> GetFacultade()
         {
-            if (_context.Estudiantes == null)
+            if (_context.Facultades == null)
             {
                 return NotFound();
             }
-            var query = from facultades in await _context.Facultades.ToListAsync()
+            var query = from facultades in await _context.Facultades.Where(e => e.Estado).ToListAsync()
                         select new FacultadesMV
                         {
                             Codigo = facultades.Id,
@@ -113,18 +113,20 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
-            var facultade = await _context.Facultades.FindAsync(id);
-            if (facultade == null)
+
+            var facultad = await _context.Facultades.FindAsync(id);
+            if (facultad == null)
             {
                 return NotFound();
             }
 
-            _context.Facultades.Remove(facultade);
+            // En lugar de eliminar físicamente, marca el estudiante como inactivo
+            facultad.Estado = false;
+
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
-
         private bool FacultadeExists(int id)
         {
             return (_context.Facultades?.Any(e => e.Id == id)).GetValueOrDefault();

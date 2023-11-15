@@ -23,13 +23,13 @@ namespace ITC2._0.Controllers
 
         // GET: api/Proyectos
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProyectosMV>>> GetEstudiantes()
+        public async Task<ActionResult<IEnumerable<ProyectosMV>>> GetProyecto()
         {
-            if (_context.Estudiantes == null)
+            if (_context.Proyectos == null)
             {
                 return NotFound();
             }
-            var query = from proyectos in await _context.Proyectos.ToListAsync()
+            var query = from proyectos in await _context.Proyectos.Where(e => e.Estado).ToListAsync()
                         join tarjetas in await _context.Tarjetas.ToListAsync() on proyectos.IdTarjeta equals tarjetas.Id
                         select new ProyectosMV
                         {
@@ -38,7 +38,7 @@ namespace ITC2._0.Controllers
                             Descripcion = proyectos.Descripcion,
                             Integrantes = proyectos.NumeroIntegrantes,
                             Ultima_Actualizacion = proyectos.UltimaActualizacion,
-                            Estado = proyectos.Estado,
+                            Estado = proyectos.EstadoProyecto,
                             Titulo = tarjetas.Titulo
                         };
             return query.ToList();
@@ -116,13 +116,16 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
+
             var proyecto = await _context.Proyectos.FindAsync(id);
             if (proyecto == null)
             {
                 return NotFound();
             }
 
-            _context.Proyectos.Remove(proyecto);
+            // En lugar de eliminar físicamente, marca el estudiante como inactivo
+            proyecto.Estado = false;
+
             await _context.SaveChangesAsync();
 
             return NoContent();

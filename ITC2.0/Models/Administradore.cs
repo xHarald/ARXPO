@@ -13,7 +13,7 @@ public partial class Administradore
 
     public string? Telefono { get; set; }
 
-    public string? Estado { get; set; }
+    public bool Estado { get; set; } = true;
 
     public virtual Usuario? IdUsuarioNavigation { get; set; }
 

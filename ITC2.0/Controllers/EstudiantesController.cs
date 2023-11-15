@@ -23,7 +23,7 @@ namespace ITC2._0.Controllers
 
         // GET: api/Estudiantes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EstudiantesMV>>> GetEstudiantes()
+        public async Task<ActionResult<IEnumerable<EstudiantesMV>>> GetEstudiante()
         {
           if (_context.Estudiantes == null)
           {

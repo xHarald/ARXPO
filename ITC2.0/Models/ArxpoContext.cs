@@ -53,9 +53,8 @@ public partial class ArxpoContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("descripcion");
             entity.Property(e => e.Estado)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .IsFixedLength()
+                .IsRequired()
+                .HasDefaultValueSql("((1))")
                 .HasColumnName("estado");
             entity.Property(e => e.Horas).HasColumnName("horas");
             entity.Property(e => e.IdEstudiante).HasColumnName("id_estudiante");
@@ -76,9 +75,8 @@ public partial class ArxpoContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Estado)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .IsFixedLength()
+                .IsRequired()
+                .HasDefaultValueSql("((1))")
                 .HasColumnName("estado");
             entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
             entity.Property(e => e.Nombre)
@@ -101,9 +99,8 @@ public partial class ArxpoContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Estado)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .IsFixedLength()
+                .IsRequired()
+                .HasDefaultValueSql("((1))")
                 .HasColumnName("estado");
             entity.Property(e => e.IdPresentacion).HasColumnName("id_presentacion");
             entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
@@ -129,7 +126,8 @@ public partial class ArxpoContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Estado)
                 .IsRequired()
-                .HasDefaultValueSql("((1))");
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("estado");
             entity.Property(e => e.IdPrograma).HasColumnName("id_programa");
             entity.Property(e => e.IdProyecto).HasColumnName("id_proyecto");
             entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
@@ -175,9 +173,8 @@ public partial class ArxpoContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("descripcion");
             entity.Property(e => e.Estado)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .IsFixedLength()
+                .IsRequired()
+                .HasDefaultValueSql("((1))")
                 .HasColumnName("estado");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(50)
@@ -198,9 +195,8 @@ public partial class ArxpoContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("dia_presentacion");
             entity.Property(e => e.Estado)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .IsFixedLength()
+                .IsRequired()
+                .HasDefaultValueSql("((1))")
                 .HasColumnName("estado");
             entity.Property(e => e.IdAdministrador).HasColumnName("id_administrador");
             entity.Property(e => e.IdProyecto).HasColumnName("id_proyecto");
@@ -253,9 +249,8 @@ public partial class ArxpoContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("descripcion");
             entity.Property(e => e.Estado)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .IsFixedLength()
+                .IsRequired()
+                .HasDefaultValueSql("((1))")
                 .HasColumnName("estado");
             entity.Property(e => e.EstadoProyecto)
                 .HasMaxLength(10)
@@ -283,9 +278,8 @@ public partial class ArxpoContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Estado)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .IsFixedLength()
+                .IsRequired()
+                .HasDefaultValueSql("((1))")
                 .HasColumnName("estado");
             entity.Property(e => e.IdDocente).HasColumnName("id_docente");
             entity.Property(e => e.IdProyecto).HasColumnName("id_proyecto");
@@ -313,9 +307,8 @@ public partial class ArxpoContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("descripcion");
             entity.Property(e => e.Estado)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .IsFixedLength()
+                .IsRequired()
+                .HasDefaultValueSql("((1))")
                 .HasColumnName("estado");
             entity.Property(e => e.EstadoTarjeta)
                 .HasMaxLength(10)
@@ -360,9 +353,8 @@ public partial class ArxpoContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("correo");
             entity.Property(e => e.Estado)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .IsFixedLength()
+                .IsRequired()
+                .HasDefaultValueSql("((1))")
                 .HasColumnName("estado");
         });
 

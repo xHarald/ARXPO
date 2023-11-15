@@ -23,7 +23,7 @@ namespace ITC2._0.Controllers
 
         // GET: api/Programas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProgramasMV>>> GetEstudiantes()
+        public async Task<ActionResult<IEnumerable<ProgramasMV>>> GetPrograma()
         {
             if (_context.Programas == null)
             {
@@ -114,14 +114,14 @@ namespace ITC2._0.Controllers
                 return NotFound();
             }
 
-            var estudiante = await _context.Programas.FindAsync(id);
-            if (estudiante == null)
+            var programa = await _context.Programas.FindAsync(id);
+            if (programa == null)
             {
                 return NotFound();
             }
 
             // En lugar de eliminar físicamente, marca el estudiante como inactivo
-            estudiante.Estado = false;
+            programa.Estado = false;
 
             await _context.SaveChangesAsync();
 
