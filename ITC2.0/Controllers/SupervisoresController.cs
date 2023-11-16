@@ -23,13 +23,13 @@ namespace ITC2._0.Controllers
 
         // GET: api/Supervisores
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SupervisoresMV>>> GetEstudiantes()
+        public async Task<ActionResult<IEnumerable<SupervisoresMV>>> GetSupervisore()
         {
-            if (_context.Estudiantes == null)
+            if (_context.Supervisores == null)
             {
                 return NotFound();
             }
-            var query = from supervisores in await _context.Supervisores.ToListAsync()
+            var query = from supervisores in await _context.Supervisores.Where(e => e.Estado).ToListAsync()
                         join proyectos in await _context.Proyectos.ToListAsync() on supervisores.IdProyecto equals proyectos.Id
                         join docentes in await _context.Docentes.ToListAsync() on supervisores.IdDocente equals docentes.Id
                         select new SupervisoresMV
@@ -114,13 +114,16 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
-            var supervisore = await _context.Supervisores.FindAsync(id);
-            if (supervisore == null)
+
+            var supervisor = await _context.Supervisores.FindAsync(id);
+            if (supervisor == null)
             {
                 return NotFound();
             }
 
-            _context.Supervisores.Remove(supervisore);
+            // En lugar de eliminar físicamente, marca el estudiante como inactivo
+            supervisor.Estado = false;
+
             await _context.SaveChangesAsync();
 
             return NoContent();

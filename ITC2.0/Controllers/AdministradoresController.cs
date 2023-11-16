@@ -23,13 +23,13 @@ namespace ITC2._0.Controllers
 
         // GET: api/Administradores
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AdministradoresMV>>> GetEstudiantes()
+        public async Task<ActionResult<IEnumerable<AdministradoresMV>>> GetAdministradore()
         {
-            if (_context.Estudiantes == null)
+            if (_context.Administradores == null)
             {
                 return NotFound();
             }
-            var query = from administradores in await _context.Administradores.ToListAsync()
+            var query = from administradores in await _context.Administradores.Where(e => e.Estado).ToListAsync()
                         join usuarios in await _context.Usuarios.ToListAsync() on administradores.IdUsuario equals usuarios.Id
                         select new AdministradoresMV
                         {
@@ -113,13 +113,16 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
-            var administradore = await _context.Administradores.FindAsync(id);
-            if (administradore == null)
+
+            var administrador = await _context.Administradores.FindAsync(id);
+            if (administrador == null)
             {
                 return NotFound();
             }
 
-            _context.Administradores.Remove(administradore);
+            // En lugar de eliminar físicamente, marca el estudiante como inactivo
+            administrador.Estado = false;
+
             await _context.SaveChangesAsync();
 
             return NoContent();

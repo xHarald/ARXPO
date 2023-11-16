@@ -23,15 +23,16 @@ namespace ITC2._0.Controllers
 
         // GET: api/Estudiantes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EstudiantesMV>>> GetEstudiantes()
+        public async Task<ActionResult<IEnumerable<EstudiantesMV>>> GetEstudiante()
         {
           if (_context.Estudiantes == null)
           {
               return NotFound();
           }
-            var query = from estudiantes in await _context.Estudiantes.ToListAsync()
-                        join programas in await _context.Programas.ToListAsync() on estudiantes.Id equals programas.Id                                        
-                        join proyectos in await _context.Proyectos.ToListAsync() on estudiantes.Id equals proyectos.Id 
+
+            var query = from estudiantes in await _context.Estudiantes.Where(e => e.Estado).ToListAsync()
+                        join programas in await _context.Programas.ToListAsync() on estudiantes.IdUsuario equals programas.Id                                        
+                        join proyectos in await _context.Proyectos.ToListAsync() on estudiantes.IdUsuario equals proyectos.Id 
                         select new EstudiantesMV
                         {
                             Codigo = estudiantes.Id,
@@ -40,8 +41,7 @@ namespace ITC2._0.Controllers
                             TipoIdentificacion = estudiantes.TipoIdentificacion,
                             Identificacion = estudiantes.Identificacion,
                             Programa = programas.NombrePrograma,
-                            Proyecto = proyectos.Nombre
-
+                            Proyecto = proyectos.Nombre,
                         };
             return  query.ToList(); 
         }
@@ -118,13 +118,16 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
+
             var estudiante = await _context.Estudiantes.FindAsync(id);
             if (estudiante == null)
             {
                 return NotFound();
             }
 
-            _context.Estudiantes.Remove(estudiante);
+            // En lugar de eliminar físicamente, marca el estudiante como inactivo
+            estudiante.Estado = false;
+
             await _context.SaveChangesAsync();
 
             return NoContent();

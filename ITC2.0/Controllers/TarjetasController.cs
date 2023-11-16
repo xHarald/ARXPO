@@ -23,13 +23,13 @@ namespace ITC2._0.Controllers
 
         // GET: api/Tarjetas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TarjetasMV>>> GetEstudiantes()
+        public async Task<ActionResult<IEnumerable<TarjetasMV>>> GetTarjeta()
         {
-            if (_context.Estudiantes == null)
+            if (_context.Tarjetas == null)
             {
                 return NotFound();
             }
-            var query = from tarjetas in await _context.Tarjetas.ToListAsync()
+            var query = from tarjetas in await _context.Tarjetas.Where(e => e.Estado).ToListAsync()
                         select new TarjetasMV
                         {
                             Codigo = tarjetas.Id,
@@ -39,7 +39,7 @@ namespace ITC2._0.Controllers
                             Extension = tarjetas.Extension,
                             Fecha_Subida = tarjetas.FechaSubida,
                             Fecha_Terminado = tarjetas.FechaTerminado,
-                            Estado = tarjetas.Estado,
+                            Estado = tarjetas.EstadoTarjeta,
                         };
             return query.ToList();
         }
@@ -116,13 +116,16 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
+
             var tarjeta = await _context.Tarjetas.FindAsync(id);
             if (tarjeta == null)
             {
                 return NotFound();
             }
 
-            _context.Tarjetas.Remove(tarjeta);
+            // En lugar de eliminar físicamente, marca el estudiante como inactivo
+            tarjeta.Estado = false;
+
             await _context.SaveChangesAsync();
 
             return NoContent();

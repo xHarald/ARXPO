@@ -21,7 +21,9 @@ public partial class Tarjeta
 
     public DateTime? FechaTerminado { get; set; }
 
-    public string? Estado { get; set; }
+    public string? EstadoTarjeta { get; set; }
+
+    public bool Estado { get; set; } = true;
 
     public virtual ICollection<Proyecto> Proyectos { get; set; } = new List<Proyecto>();
 }

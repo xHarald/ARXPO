@@ -14,6 +14,6 @@
 
         public string? Programa { get; set; }
 
-        public string? Proyecto { get; set; }
+        public string? Proyecto { get; set; }       
     }
 }

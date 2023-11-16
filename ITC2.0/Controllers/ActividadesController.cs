@@ -24,14 +24,13 @@ namespace ITC2._0.Controllers
 
         // GET: api/Actividades
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ActividadesMV>>> GetActividades()
+        public async Task<ActionResult<IEnumerable<ActividadesMV>>> GetActividade()
         {
             if (_context.Actividades == null)
             {
                 return NotFound();
             }
-
-            var query = from actividades in await _context.Actividades.ToListAsync()
+            var query = from actividades in await _context.Actividades.Where(e => e.Estado).ToListAsync()
                         join estudiantes in await _context.Estudiantes.ToListAsync() on actividades.IdEstudiante equals estudiantes.Id
                         select new ActividadesMV
                         {
@@ -118,13 +117,16 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
-            var actividade = await _context.Actividades.FindAsync(id);
-            if (actividade == null)
+
+            var actividad = await _context.Actividades.FindAsync(id);
+            if (actividad == null)
             {
                 return NotFound();
             }
 
-            _context.Actividades.Remove(actividade);
+            // En lugar de eliminar físicamente, marca el estudiante como inactivo
+            actividad.Estado = false;
+
             await _context.SaveChangesAsync();
 
             return NoContent();
