@@ -15,7 +15,7 @@ public partial class Docente
 
     public int? IdPresentacion { get; set; }
 
-    public bool Estado { get; set; } = true;
+    public string? Estado { get; set; }
 
     public virtual Presentacione? IdPresentacionNavigation { get; set; }
 

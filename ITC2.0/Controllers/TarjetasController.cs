@@ -29,7 +29,7 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
-            var query = from tarjetas in await _context.Tarjetas.Where(e => e.Estado).ToListAsync()
+            var query = from tarjetas in await _context.Tarjetas.Where(e => e.Estado == "A").ToListAsync()
                         select new TarjetasMV
                         {
                             Codigo = tarjetas.Id,
@@ -37,6 +37,7 @@ namespace ITC2._0.Controllers
                             Descripcion = tarjetas.Descripcion,
                             Link = tarjetas.Link,
                             Extension = tarjetas.Extension,
+                            Observacion = tarjetas.Observacion,
                             Fecha_Subida = tarjetas.FechaSubida,
                             Fecha_Terminado = tarjetas.FechaTerminado,
                             Estado = tarjetas.EstadoTarjeta,
@@ -124,7 +125,7 @@ namespace ITC2._0.Controllers
             }
 
             // En lugar de eliminar físicamente, marca el estudiante como inactivo
-            tarjeta.Estado = false;
+            tarjeta.Estado = "I";
 
             await _context.SaveChangesAsync();
 

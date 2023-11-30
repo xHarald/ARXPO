@@ -29,7 +29,7 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
-            var query = from programas in await _context.Programas.Where(e => e.Estado).ToListAsync()
+            var query = from programas in await _context.Programas.Where(e => e.Estado == "A").ToListAsync()
                         join facultades in await _context.Facultades.ToListAsync() on programas.IdFacultad equals facultades.Id
                         select new ProgramasMV
                         {
@@ -121,7 +121,7 @@ namespace ITC2._0.Controllers
             }
 
             // En lugar de eliminar físicamente, marca el estudiante como inactivo
-            programa.Estado = false;
+            programa.Estado = "I";
 
             await _context.SaveChangesAsync();
 

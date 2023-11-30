@@ -29,7 +29,7 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
-            var query = from proyectos in await _context.Proyectos.Where(e => e.Estado).ToListAsync()
+            var query = from proyectos in await _context.Proyectos.Where(e => e.Estado == "A").ToListAsync()
                         join tarjetas in await _context.Tarjetas.ToListAsync() on proyectos.IdTarjeta equals tarjetas.Id
                         select new ProyectosMV
                         {
@@ -124,7 +124,7 @@ namespace ITC2._0.Controllers
             }
 
             // En lugar de eliminar físicamente, marca el estudiante como inactivo
-            proyecto.Estado = false;
+            proyecto.Estado = "I";
 
             await _context.SaveChangesAsync();
 

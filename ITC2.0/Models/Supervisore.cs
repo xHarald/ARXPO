@@ -13,7 +13,7 @@ public partial class Supervisore
 
     public int? IdDocente { get; set; }
 
-    public bool Estado { get; set; } = true;
+    public string? Estado { get; set; }
 
     public virtual Docente? IdDocenteNavigation { get; set; }
 

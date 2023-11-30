@@ -11,7 +11,7 @@ public partial class Usuario
 
     public string? Contraseña { get; set; }
 
-    public bool Estado { get; set; } = true;
+    public string? Estado { get; set; }
 
     public virtual ICollection<Administradore> Administradores { get; set; } = new List<Administradore>();
 
