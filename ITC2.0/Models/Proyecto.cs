@@ -19,7 +19,7 @@ public partial class Proyecto
 
     public int? IdTarjeta { get; set; }
 
-    public bool Estado { get; set; } = true;
+    public string? Estado { get; set; }
 
     public virtual ICollection<Estudiante> Estudiantes { get; set; } = new List<Estudiante>();
 

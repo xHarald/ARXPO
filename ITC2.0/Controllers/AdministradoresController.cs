@@ -29,7 +29,7 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
-            var query = from administradores in await _context.Administradores.Where(e => e.Estado).ToListAsync()
+            var query = from administradores in await _context.Administradores.Where(e => e.Estado == "A").ToListAsync()
                         join usuarios in await _context.Usuarios.ToListAsync() on administradores.IdUsuario equals usuarios.Id
                         select new AdministradoresMV
                         {
@@ -121,7 +121,7 @@ namespace ITC2._0.Controllers
             }
 
             // En lugar de eliminar físicamente, marca el estudiante como inactivo
-            administrador.Estado = false;
+            administrador.Estado = "I";
 
             await _context.SaveChangesAsync();
 

@@ -21,7 +21,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<ArxpoContext>(options => options.UseSqlServer("Server=DESKTOP-E1EBHHH;Database=ARXPO; Trusted_Connection=true;MultipleActiveResultSets=true"));
+builder.Services.AddDbContext<ArxpoContext>(options => options.UseSqlServer("Server=Javier;Database=ARXPO; Trusted_Connection=true;MultipleActiveResultSets=true"));
 var app = builder.Build();
 
 //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

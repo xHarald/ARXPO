@@ -30,7 +30,7 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
-            var query = from actividades in await _context.Actividades.Where(e => e.Estado).ToListAsync()
+            var query = from actividades in await _context.Actividades.Where(e => e.Estado == "A").ToListAsync()
                         join estudiantes in await _context.Estudiantes.ToListAsync() on actividades.IdEstudiante equals estudiantes.Id
                         select new ActividadesMV
                         {
@@ -125,7 +125,7 @@ namespace ITC2._0.Controllers
             }
 
             // En lugar de eliminar físicamente, marca el estudiante como inactivo
-            actividad.Estado = false;
+            actividad.Estado = "I";
 
             await _context.SaveChangesAsync();
 

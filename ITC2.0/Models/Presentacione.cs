@@ -15,7 +15,7 @@ public partial class Presentacione
 
     public int? IdAdministrador { get; set; }
 
-    public bool Estado { get; set; } = true;
+    public string? Estado { get; set; }
 
     public virtual ICollection<Docente> Docentes { get; set; } = new List<Docente>();
 

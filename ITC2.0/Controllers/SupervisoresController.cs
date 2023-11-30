@@ -29,7 +29,7 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
-            var query = from supervisores in await _context.Supervisores.Where(e => e.Estado).ToListAsync()
+            var query = from supervisores in await _context.Supervisores.Where(e => e.Estado == "A").ToListAsync()
                         join proyectos in await _context.Proyectos.ToListAsync() on supervisores.IdProyecto equals proyectos.Id
                         join docentes in await _context.Docentes.ToListAsync() on supervisores.IdDocente equals docentes.Id
                         select new SupervisoresMV
@@ -122,7 +122,7 @@ namespace ITC2._0.Controllers
             }
 
             // En lugar de eliminar físicamente, marca el estudiante como inactivo
-            supervisor.Estado = false;
+            supervisor.Estado = "I";
 
             await _context.SaveChangesAsync();
 

@@ -15,7 +15,7 @@ public partial class Facultade
 
     public string? Correo { get; set; }
 
-    public bool Estado { get; set; } = true;
+    public string? Estado { get; set; }
 
     public virtual ICollection<Programa> Programas { get; set; } = new List<Programa>();
 }

@@ -23,7 +23,7 @@ public partial class Tarjeta
 
     public string? EstadoTarjeta { get; set; }
 
-    public bool Estado { get; set; } = true;
+    public string? Estado { get; set; }
 
     public virtual ICollection<Proyecto> Proyectos { get; set; } = new List<Proyecto>();
 }
