@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITC2._0.Models;
+using ITC2._0.ModelsView;
 
 namespace ITC2._0.Controllers
 {
@@ -22,13 +23,23 @@ namespace ITC2._0.Controllers
 
         // GET: api/Supervisores
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Supervisore>>> GetSupervisores()
+        public async Task<ActionResult<IEnumerable<SupervisoresMV>>> GetSupervisore()
         {
-          if (_context.Supervisores == null)
-          {
-              return NotFound();
-          }
-            return await _context.Supervisores.ToListAsync();
+            if (_context.Supervisores == null)
+            {
+                return NotFound();
+            }
+            var query = from supervisores in await _context.Supervisores.Where(e => e.Estado == "A").ToListAsync()
+                        join proyectos in await _context.Proyectos.ToListAsync() on supervisores.IdProyecto equals proyectos.Id
+                        join docentes in await _context.Docentes.ToListAsync() on supervisores.IdDocente equals docentes.Id
+                        select new SupervisoresMV
+                        {
+                            Codigo = supervisores.Id,
+                            Nombre_Proyecto = proyectos.Nombre,
+                            Motivo = supervisores.Motivo,
+                            Nombre_Docente = docentes.Nombre,
+                        };
+            return query.ToList();
         }
 
         // GET: api/Supervisores/5
@@ -103,13 +114,16 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
-            var supervisore = await _context.Supervisores.FindAsync(id);
-            if (supervisore == null)
+
+            var supervisor = await _context.Supervisores.FindAsync(id);
+            if (supervisor == null)
             {
                 return NotFound();
             }
 
-            _context.Supervisores.Remove(supervisore);
+            // En lugar de eliminar físicamente, marca el estudiante como inactivo
+            supervisor.Estado = "I";
+
             await _context.SaveChangesAsync();
 
             return NoContent();

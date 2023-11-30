@@ -13,6 +13,8 @@ public partial class Administradore
 
     public string? Telefono { get; set; }
 
+    public string? Estado { get; set; }
+
     public virtual Usuario? IdUsuarioNavigation { get; set; }
 
     public virtual ICollection<Presentacione> Presentaciones { get; set; } = new List<Presentacione>();

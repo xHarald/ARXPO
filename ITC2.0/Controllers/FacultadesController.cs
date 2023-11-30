@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITC2._0.Models;
+using ITC2._0.ModelsView;
 
 namespace ITC2._0.Controllers
 {
@@ -22,13 +23,22 @@ namespace ITC2._0.Controllers
 
         // GET: api/Facultades
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Facultade>>> GetFacultades()
+        public async Task<ActionResult<IEnumerable<FacultadesMV>>> GetFacultade()
         {
-          if (_context.Facultades == null)
-          {
-              return NotFound();
-          }
-            return await _context.Facultades.ToListAsync();
+            if (_context.Facultades == null)
+            {
+                return NotFound();
+            }
+            var query = from facultades in await _context.Facultades.Where(e => e.Estado == "A").ToListAsync()
+                        select new FacultadesMV
+                        {
+                            Codigo = facultades.Id,
+                            Nombre = facultades.Nombre,
+                            Descripcion = facultades.Descripcion,
+                            Contacto = facultades.TelefonoContacto,
+                            Correo = facultades.Correo
+                        };
+            return query.ToList();
         }
 
         // GET: api/Facultades/5
@@ -103,18 +113,20 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
-            var facultade = await _context.Facultades.FindAsync(id);
-            if (facultade == null)
+
+            var facultad = await _context.Facultades.FindAsync(id);
+            if (facultad == null)
             {
                 return NotFound();
             }
 
-            _context.Facultades.Remove(facultade);
+            // En lugar de eliminar físicamente, marca el estudiante como inactivo
+            facultad.Estado = "I";
+
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
-
         private bool FacultadeExists(int id)
         {
             return (_context.Facultades?.Any(e => e.Id == id)).GetValueOrDefault();

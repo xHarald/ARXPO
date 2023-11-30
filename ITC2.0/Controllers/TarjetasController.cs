@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITC2._0.Models;
+using ITC2._0.ModelsView;
 
 namespace ITC2._0.Controllers
 {
@@ -22,13 +23,26 @@ namespace ITC2._0.Controllers
 
         // GET: api/Tarjetas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tarjeta>>> GetTarjetas()
+        public async Task<ActionResult<IEnumerable<TarjetasMV>>> GetTarjeta()
         {
-          if (_context.Tarjetas == null)
-          {
-              return NotFound();
-          }
-            return await _context.Tarjetas.ToListAsync();
+            if (_context.Tarjetas == null)
+            {
+                return NotFound();
+            }
+            var query = from tarjetas in await _context.Tarjetas.Where(e => e.Estado == "A").ToListAsync()
+                        select new TarjetasMV
+                        {
+                            Codigo = tarjetas.Id,
+                            Titulo = tarjetas.Titulo,
+                            Descripcion = tarjetas.Descripcion,
+                            Link = tarjetas.Link,
+                            Extension = tarjetas.Extension,
+                            Observacion = tarjetas.Observacion,
+                            Fecha_Subida = tarjetas.FechaSubida,
+                            Fecha_Terminado = tarjetas.FechaTerminado,
+                            Estado = tarjetas.EstadoTarjeta,
+                        };
+            return query.ToList();
         }
 
         // GET: api/Tarjetas/5
@@ -103,13 +117,16 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
+
             var tarjeta = await _context.Tarjetas.FindAsync(id);
             if (tarjeta == null)
             {
                 return NotFound();
             }
 
-            _context.Tarjetas.Remove(tarjeta);
+            // En lugar de eliminar físicamente, marca el estudiante como inactivo
+            tarjeta.Estado = "I";
+
             await _context.SaveChangesAsync();
 
             return NoContent();

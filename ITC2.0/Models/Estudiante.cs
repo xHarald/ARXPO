@@ -21,6 +21,8 @@ public partial class Estudiante
 
     public int? IdProyecto { get; set; }
 
+    public string? Estado { get; set; }
+
     public virtual ICollection<Actividade> Actividades { get; set; } = new List<Actividade>();
 
     public virtual Programa? IdProgramaNavigation { get; set; }

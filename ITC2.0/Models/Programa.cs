@@ -13,6 +13,8 @@ public partial class Programa
 
     public int? IdFacultad { get; set; }
 
+    public string? Estado { get; set; }
+
     public virtual ICollection<Estudiante> Estudiantes { get; set; } = new List<Estudiante>();
 
     public virtual Facultade? IdFacultadNavigation { get; set; }

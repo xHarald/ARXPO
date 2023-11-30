@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITC2._0.Models;
+using ITC2._0.ModelsView;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace ITC2._0.Controllers
 {
@@ -22,14 +24,26 @@ namespace ITC2._0.Controllers
 
         // GET: api/Actividades
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Actividade>>> GetActividades()
+        public async Task<ActionResult<IEnumerable<ActividadesMV>>> GetActividade()
         {
-          if (_context.Actividades == null)
-          {
-              return NotFound();
-          }
-            return await _context.Actividades.ToListAsync();
+            if (_context.Actividades == null)
+            {
+                return NotFound();
+            }
+            var query = from actividades in await _context.Actividades.Where(e => e.Estado == "A").ToListAsync()
+                        join estudiantes in await _context.Estudiantes.ToListAsync() on actividades.IdEstudiante equals estudiantes.Id
+                        select new ActividadesMV
+                        {
+                            Codigo = actividades.Id,
+                            Estudiante = estudiantes.Nombre,
+                            Titulo = actividades.TituloActividad,
+                            Descripcion = actividades.Descripcion,
+                            Horas = actividades.Horas,
+                            Terminar = actividades.Horas,
+                        };
+            return query.ToList();
         }
+
 
         // GET: api/Actividades/5
         [HttpGet("{id}")]
@@ -103,13 +117,16 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
-            var actividade = await _context.Actividades.FindAsync(id);
-            if (actividade == null)
+
+            var actividad = await _context.Actividades.FindAsync(id);
+            if (actividad == null)
             {
                 return NotFound();
             }
 
-            _context.Actividades.Remove(actividade);
+            // En lugar de eliminar físicamente, marca el estudiante como inactivo
+            actividad.Estado = "I";
+
             await _context.SaveChangesAsync();
 
             return NoContent();

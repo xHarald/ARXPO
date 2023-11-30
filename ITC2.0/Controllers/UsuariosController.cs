@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITC2._0.Models;
+using ITC2._0.ModelsView;
 
 namespace ITC2._0.Controllers
 {
@@ -22,15 +23,21 @@ namespace ITC2._0.Controllers
 
         // GET: api/Usuarios
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
+        public async Task<ActionResult<IEnumerable<UsuariosMV>>> GetUsuario()
         {
-          if (_context.Usuarios == null)
-          {
-              return NotFound();
-          }
-            return await _context.Usuarios.ToListAsync();
+            if (_context.Usuarios == null)
+            {
+                return NotFound();
+            }
+            var query = from usuarios in await _context.Usuarios.Where(e => e.Estado == "A").ToListAsync()
+                        select new UsuariosMV
+                        {
+                            Codigo = usuarios.Id,
+                            Correo = usuarios.Correo,
+                            Contraseña = usuarios.Contraseña            
+                        };
+            return query.ToList();
         }
-
         // GET: api/Usuarios/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
@@ -103,13 +110,16 @@ namespace ITC2._0.Controllers
             {
                 return NotFound();
             }
+
             var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario == null)
             {
                 return NotFound();
             }
 
-            _context.Usuarios.Remove(usuario);
+            // En lugar de eliminar físicamente, marca el estudiante como inactivo
+            usuario.Estado = "I";
+
             await _context.SaveChangesAsync();
 
             return NoContent();
